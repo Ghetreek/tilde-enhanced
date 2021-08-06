@@ -132,7 +132,7 @@ class Form {
     }
   
     _redirect(redirect) {
-      if (this._newTab) window.open(redirect, '_blank');
+      if ((this._newTab) || (this._newTabWithCtrl && this.isCtrlEnter)) window.open(redirect, '_blank');
       else window.location.href = redirect;
     }
   
@@ -159,7 +159,7 @@ class Form {
       let query = this._inputEl.value;
       if (this._suggester) this._suggester.success(query);
       this.hide();
-      if (this.isCtrlEnter) query += '.com';
+      if ((this.isCtrlEnter) && (!this._newTabWithCtrl)) query += '.com';
       this._redirect(this._parseQuery(query).redirect);
     }
   

@@ -267,6 +267,11 @@ const CONFIG = {
   newTab: false,
 
   /**
+   * Open initiated requests in a new tab while holding ctrl.
+   */
+  newTabWithCtrl: true,
+
+  /**
    * Dynamic overlay background colors when command domains are matched.
    */
   colors: true,

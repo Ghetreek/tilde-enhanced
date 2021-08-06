@@ -48,6 +48,7 @@ const form = new Form({
   colors: CONFIG.colors,
   instantRedirect: CONFIG.instantRedirect,
   newTab: CONFIG.newTab,
+  newTabWithCtrl: CONFIG.newTabWithCtrl,
   parseQuery: queryParser.parse,
   suggester,
   toggleHelp: help.toggle,
