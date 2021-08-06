@@ -48,7 +48,7 @@ class CommandsInfluencer extends Influencer {
       const commands = this._commands;
 
       commands.forEach(command => {
-        if(this._getDomain(command.url).startsWith(rawQuery)){
+        if((this._getDomain(command.url) || '').startsWith(rawQuery)){
           suggestions.push(command.url);
         }
       });
