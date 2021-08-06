@@ -6,6 +6,7 @@ class Form {
       this._inputElVal = '';
       this._instantRedirect = options.instantRedirect;
       this._newTab = options.newTab;
+      this._newTabWithCtrl = options.newTabWithCtrl;
       this._parseQuery = options.parseQuery;
       this._suggester = options.suggester;
       this._toggleHelp = options.toggleHelp;
@@ -13,6 +14,7 @@ class Form {
       this._categoryLaunch = options.categoryLaunch;
       this._clearPreview = this._clearPreview.bind(this);
       this._handleInput = this._handleInput.bind(this);
+      this._handleKeyup = this._handleKeyup.bind(this);
       this._handleKeydown = this._handleKeydown.bind(this);
       this._previewValue = this._previewValue.bind(this);
       this._submitForm = this._submitForm.bind(this);
@@ -95,7 +97,10 @@ class Form {
       if (this._instantRedirect && isKey) this._submitWithValue(newQuery);
     }
   
-  
+    _handleKeyup(e) {
+      if ($.key(e) == 'ctrl') this.isCtrlEnter = false;
+    }
+
     _handleKeydown(e) {
       if ($.isUp(e) || $.isDown(e) || $.isRemove(e)) return;
       
@@ -133,6 +138,7 @@ class Form {
   
     _registerEvents() {
       document.addEventListener('keydown', this._handleKeydown);
+      document.addEventListener('keyup', this._handleKeyup);
       this._inputEl.addEventListener('input', this._handleInput);
       this._formEl.addEventListener('submit', this._submitForm, false);
   
