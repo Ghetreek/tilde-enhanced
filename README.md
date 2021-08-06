@@ -1,11 +1,8 @@
-[![GitHub Issues](https://img.shields.io/github/issues/Ozencb/tilde-enhanced)](https://github.com/Ozencb/tilde-enhanced/issues)
-[![Stars](https://img.shields.io/github/stars/Ozencb/tilde-enhanced)](https://github.com/Ozencb/tilde-enhanced)
-[![Forks](https://img.shields.io/github/forks/Ozencb/tilde-enhanced)](https://github.com/Ozencb/tilde-enhanced)
-[![Unlicense](https://img.shields.io/github/license/Ozencb/tilde-enhanced)](../master/LICENSE)
+[![Unlicense](https://img.shields.io/github/license/Ghetreek/tilde-enhanced-up)](../master/LICENSE)
 
-# Tilde Enhanced
+# Tilde Enhanced Up
 
-Based on [Cade Scroggins](https://github.com/cadejscroggins)'s [Tilde](https://github.com/cadejscroggins/tilde).
+Based on [Ozencb](https://github.com/Ozencb)'s [Tilde](https://github.com/cadejscroggins/tilde).
 
 ## Screenshots 
 
@@ -16,11 +13,7 @@ Based on [Cade Scroggins](https://github.com/cadejscroggins)'s [Tilde](https://g
 Most of the features are carried over from the original source.
 Few of the added features are:
 
-- A launch category functionality, which launches every site in a category. Enter a category index number followed by `!`, i.e. `2!` would launch everything under the second category. 
-- A "Quick Launch" functionality, which launches every site with `quickLaunch` property set to `true` upon entering `q!`.
-- An invertible color theme. Either edit config or use `invert!` command.
-- Show image or SVG as bookmark icon
-- An option to show launch keys instead of icons. Either edit config or type `keys!`.
+- Ability to open the site in a new tab while holding down ctrl
 
 ## Usage
 
@@ -52,6 +45,8 @@ by your search query. For example:
   [GitHub for tilde-enhanced](https://github.com/search?q=tilde-enhanced).
 - Entering `y:cats` would search
   [Cats on YouTube](https://www.youtube.com/results?search_query=cats).
+- Entering `tg:ghetreek` would search
+  [username Ghetreek on Telegram](tg://resolve?domain=ghetreek).
 
 ### Specific Locations
 
@@ -97,4 +92,4 @@ You can follow [Urimu's Guide](https://github.com/Urimu/Startpage#setting-it-up-
 
 ## License
 
-Feel free to [use this and modify it however you like](https://github.com/Ozencb/tilde-enhanced/blob/master/LICENSE).
+Feel free to [use this and modify it however you like](https://github.com/Ghetreek/tilde-enhanced-up/blob/master/LICENSE).
