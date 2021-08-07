@@ -14,6 +14,7 @@ Most of the features are carried over from the original source.
 Few of the added features are:
 
 - Ability to open the site in a new tab while holding down ctrl
+- Edit config from console your browser
 
 ## Usage
 
@@ -83,6 +84,15 @@ This allows you to invoke Tilde with your native browser search bar.
 ## Configuration
 
 Open up the [config.js](js/config.js) file and read through the `CONFIG`!
+
+Also you can edit the config from console.
+
+Example:
+- `config.get('commands')`
+- `config.commands[0].url = 'https://yandex.ru/'`
+- `config.set('commands', config.commands)`
+
+Its very bad but it work
 
 ## Setting it up for new tabs on Firefox
 

@@ -1,9 +1,7 @@
 class Suggester {
-    constructor(options) {
+    constructor(influencers) {
       this._el = $.el('#search-suggestions');
-      this._enabled = options.enabled;
-      this._influencers = options.influencers;
-      this._limit = options.limit;
+      this._influencers = influencers;
       this._suggestionEls = [];
       this._handleKeydown = this._handleKeydown.bind(this);
       this._registerEvents();
@@ -27,7 +25,7 @@ class Suggester {
     }
   
     suggest(input) {
-      if (!this._enabled) return;
+      if (!config.get('suggestions')) return;
       input = input.trim();
       if (input === '') this._clearSuggestions();
   
@@ -63,7 +61,7 @@ class Suggester {
           </li>`
         );
   
-        if (i + 1 >= this._limit) return true;
+        if (i + 1 >= config.get('suggestionsLimit')) return true;
       });
   
       this._suggestionEls = $.els('.js-search-suggestion');

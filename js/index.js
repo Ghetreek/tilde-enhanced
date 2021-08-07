@@ -1,65 +1,45 @@
-// Get invertedColors preference from cookies
-CONFIG.invertedColors = localStorage.getItem('invertColorCookie') ?
-  JSON.parse(localStorage.getItem('invertColorCookie')) :
-  CONFIG.invertedColors;
+// init storage
+var storage = null
 
-// Get showKeys preference from cookies
-CONFIG.showKeys = localStorage.getItem('showKeysCookie') ?
-  JSON.parse(localStorage.getItem('showKeysCookie')) :
-  CONFIG.showKeys;
+if (typeof(browser) !== 'undefined') {
+  storage = new FirefoxStorage()
+} else if (typeof(chrome) !== 'undefined') {
+  storage = new ChromeStorage()
+} else {
+  storage = new LocalStorage()
+}
 
+const config = new Config()
 
+var lol = null
 
-const queryParser = new QueryParser({
-  commands: CONFIG.commands,
-  pathDelimiter: CONFIG.pathDelimiter,
-  searchDelimiter: CONFIG.searchDelimiter,
-});
+;(async () => {
+await config.init()
 
-const influencers = CONFIG.influencers.map(influencerConfig => {
+const queryParser = new QueryParser()
+
+const influencers = config.get('influencers').map(influencerConfig => {
   return new {
     Default: DefaultInfluencer,
     Commands: CommandsInfluencer,
     DuckDuckGo: DuckDuckGoInfluencer,
     History: HistoryInfluencer,
   } [influencerConfig.name]({
-    defaultSuggestions: CONFIG.defaultSuggestions,
+    defaultSuggestions: config.get('defaultSuggestions'),
     limit: influencerConfig.limit,
     parseQuery: queryParser.parse,
-    commands: CONFIG.commands
+    commands: config.get('commands')
   });
 });
 
-const suggester = new Suggester({
-  enabled: CONFIG.suggestions,
-  influencers,
-  limit: CONFIG.suggestionsLimit,
-});
+const suggester = new Suggester(influencers)
 
-const help = new Help({
-  commands: CONFIG.commands,
-  newTab: CONFIG.newTab,
-  suggester,
-  invertedColors: CONFIG.invertedColors,
-  showKeys: CONFIG.showKeys
-});
+const help = new Help(suggester)
 
-const form = new Form({
-  colors: CONFIG.colors,
-  instantRedirect: CONFIG.instantRedirect,
-  newTab: CONFIG.newTab,
-  newTabWithCtrl: CONFIG.newTabWithCtrl,
-  parseQuery: queryParser.parse,
-  suggester,
-  toggleHelp: help.toggle,
-  quickLaunch: help.launch,
-  categoryLaunch: help.launchCategory,
-  invertedColors: CONFIG.invertedColors,
-  showKeys: CONFIG.showKeys
-});
+const form = new Form(suggester, queryParser, help)
 
-new Clock({
-  delimiter: CONFIG.clockDelimiter,
-  toggleHelp: help.toggle,
-  twentyFourHourClock: CONFIG.twentyFourHourClock,
-});
+new Clock(help.toggle)
+
+lol = () => { form.invert() }
+
+})()

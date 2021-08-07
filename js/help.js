@@ -1,8 +1,6 @@
 class Help {
-    constructor(options) {
+    constructor(suggester) {
       this._el = $.el('#help');
-      this._commands = options.commands;
-      this._newTab = options.newTab;
       this._toggled = false;
       this._handleKeydown = this._handleKeydown.bind(this);
       this.toggle = this.toggle.bind(this);
@@ -10,8 +8,7 @@ class Help {
       this.launchCategory = this.launchCategory.bind(this);
       this._inputEl = $.el('#search-input');
       this._inputElVal = '';
-      this._suggester = options.suggester;
-      this._invertColors = options.invertedColors;
+      this._suggester = suggester;
       this._buildAndAppendLists();
       this._registerEvents();
       this._invertValue;
@@ -34,7 +31,7 @@ class Help {
       this.toggle(true);
       $.bodyClassAdd('help');
   
-      CONFIG.commands.forEach(command => {
+      config.get('commands').forEach(command => {
         if(command.quickLaunch) window.open(command.url);
       });
     }
@@ -43,14 +40,14 @@ class Help {
       
       const categorySet = new Set();
   
-      CONFIG.commands.forEach(command => {
+      config.get('commands').forEach(command => {
         if(command.category) categorySet.add(command.category);
       });
   
       const targetCategoryIndex = $.el('#search-input').value.replace('!', '');
       const targetCategory = Array.from(categorySet)[targetCategoryIndex - 1];
       
-      CONFIG.commands.forEach(command => {
+      config.get('commands').forEach(command => {
         if(targetCategory && command.category === targetCategory) window.open(command.url);
       });
     }
@@ -73,7 +70,7 @@ class Help {
     }
   
     _buildListCommands(currentCategory) {
-      let invertValue = this._invertColors ? 1: 0;
+      let invertValue = config.get('invertedColors') ? 1: 0;
   
       const bgcolor = invertValue ? getComputedStyle(document.documentElement).getPropertyValue('--foreground') 
                                   : getComputedStyle(document.documentElement).getPropertyValue('--background');
@@ -82,9 +79,9 @@ class Help {
                                   : getComputedStyle(document.documentElement).getPropertyValue('--foreground');
   
   
-      const commandListWithIcons =  this._commands
+      const commandListWithIcons =  config.get('commands')
         .map(({ category, name, key, url, icon }, i) => {
-          const iconEl = CONFIG.iconExtension !== 'svg'
+          const iconEl = config.get('iconExtension') !== 'svg'
                        ? `<img src='assets/icons/${icon}.png' height = 28px center style="filter: invert(${invertValue});">`
                        : `<img src='assets/icons/${icon}.svg' onload="SVGInject(this)" height = 28px center style="fill: ${fgcolor};">`
   
@@ -98,7 +95,7 @@ class Help {
                 }   
               </style>
               <li class="command">
-                <a href="${url}" target="${this._newTab ? '_blank' : '_self'}">
+                <a href="${url}" target="${config.get('newTab') ? '_blank' : '_self'}">
                   <span class="command-key command-key-${i}">${iconEl}</span>
                   <span class="command-name">${name}</span>
                 </a>
@@ -108,12 +105,12 @@ class Help {
         })
         .join('');
   
-      const commandListWithKeys = this._commands
+      const commandListWithKeys = config.get('commands')
         .map(({ category, name, key, url }, i) => {
           if (category === currentCategory) {
             return `
               <li class="command">
-                <a href="${url}" target="${this._newTab ? '_blank' : '_self'}">
+                <a href="${url}" target="${config.get('newTab') ? '_blank' : '_self'}">
                       <style>
                         .command-key-${i} {
                           color: ${fgcolor}; 
@@ -130,11 +127,11 @@ class Help {
         })
         .join('');
   
-      return CONFIG.showKeys ? commandListWithKeys : commandListWithIcons;
+      return config.get('showKeys') ? commandListWithKeys : commandListWithIcons;
     }
   
     _getCategories() {
-      const categories = this._commands
+      const categories = config.get('commands')
         .map(v => v.category)
         .filter(category => category);
   

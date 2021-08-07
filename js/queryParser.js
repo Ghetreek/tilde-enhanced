@@ -1,8 +1,5 @@
 class QueryParser {
-    constructor(options) {
-      this._commands = options.commands;
-      this._searchDelimiter = options.searchDelimiter;
-      this._pathDelimiter = options.pathDelimiter;
+    constructor() {
       this._protocolRegex = /^[a-zA-Z]+:\/\//i;
       this._urlRegex = /^((https?:\/\/)?[\w-]+(\.[\w-]+)+\.?(:\d+)?(\/\S*)?)$/i;
       this.parse = this.parse.bind(this);
@@ -16,10 +13,10 @@ class QueryParser {
         res.redirect = hasProtocol ? query : 'http://' + query;
       } else {
         const trimmed = query.trim();
-        const splitSearch = trimmed.split(this._searchDelimiter);
-        const splitPath = trimmed.split(this._pathDelimiter);
+        const splitSearch = trimmed.split(config.get('searchDelimiter'));
+        const splitPath = trimmed.split(config.get('pathDelimiter'));
   
-        this._commands.some(({ category, key, name, search, url }) => {
+        config.get('commands').some(({ category, key, name, search, url }) => {
           if (query === key) {
             res.key = key;
             res.isKey = true;
@@ -30,7 +27,7 @@ class QueryParser {
           if (splitSearch[0] === key && search) {
             res.key = key;
             res.isSearch = true;
-            res.split = this._searchDelimiter;
+            res.split = config.get('searchDelimiter');
             res.query = QueryParser._shiftAndTrim(splitSearch, res.split);
             res.redirect = QueryParser._prepSearch(url, search, res.query);
             return true;
@@ -39,7 +36,7 @@ class QueryParser {
           if (splitPath[0] === key) {
             res.key = key;
             res.isPath = true;
-            res.split = this._pathDelimiter;
+            res.split = config.get('pathDelimiter');
             res.path = QueryParser._shiftAndTrim(splitPath, res.split);
             res.redirect = QueryParser._prepPath(url, res.path);
             return true;
@@ -51,7 +48,7 @@ class QueryParser {
         });
       }
   
-      res.color = QueryParser._getColorFromUrl(this._commands, res.redirect);
+      res.color = QueryParser._getColorFromUrl(config.get('commands'), res.redirect);
       return res;
     }
   

@@ -1,17 +1,13 @@
 class Form {
-    constructor(options) {
-      this._colors = options.colors;
+    constructor(suggester, queryParser, help) {
       this._formEl = $.el('#search-form');
       this._inputEl = $.el('#search-input');
       this._inputElVal = '';
-      this._instantRedirect = options.instantRedirect;
-      this._newTab = options.newTab;
-      this._newTabWithCtrl = options.newTabWithCtrl;
-      this._parseQuery = options.parseQuery;
-      this._suggester = options.suggester;
-      this._toggleHelp = options.toggleHelp;
-      this._quickLaunch = options.quickLaunch;
-      this._categoryLaunch = options.categoryLaunch;
+      this._parseQuery = queryParser.parse;
+      this._suggester = suggester;
+      this._toggleHelp = help.toggle;
+      this._quickLaunch = help.launch;
+      this._categoryLaunch = help.launchCategory;
       this._clearPreview = this._clearPreview.bind(this);
       this._handleInput = this._handleInput.bind(this);
       this._handleKeyup = this._handleKeyup.bind(this);
@@ -19,7 +15,6 @@ class Form {
       this._previewValue = this._previewValue.bind(this);
       this._submitForm = this._submitForm.bind(this);
       this._submitWithValue = this._submitWithValue.bind(this);
-      this._invertColors = options.invertedColors;
       this.hide = this.hide.bind(this);
       this.show = this.show.bind(this);
       this._registerEvents();
@@ -42,23 +37,23 @@ class Form {
     }
   
     invert() {
-      if (this._invertColors) {
+      if (config.get('invertedColors')) {
         const bgcolor = getComputedStyle(document.documentElement).getPropertyValue('--background');
         const fgcolor = getComputedStyle(document.documentElement).getPropertyValue('--foreground');
         document.documentElement.style.setProperty('--background', fgcolor);
-        document.documentElement.style.setProperty('--foreground', bgcolor);    
+        document.documentElement.style.setProperty('--foreground', bgcolor); 
       }
     }
   
     _invertConfig() {
-      let isInverted = !CONFIG.invertedColors;
+      let isInverted = !config.get('invertedColors');
       localStorage.removeItem('invertColorCookie');
       localStorage.setItem('invertColorCookie', JSON.stringify(isInverted));
       location.reload();
     }
   
     _showKeysConfig() {
-      let isShowKeys = !CONFIG.showKeys;
+      let isShowKeys = !config.get('showKeys');
       localStorage.removeItem('showKeysCookie');
       localStorage.setItem('showKeysCookie', JSON.stringify(isShowKeys));
       location.reload();
@@ -94,7 +89,7 @@ class Form {
       if (isInvert) this._invertConfig();
       if (isShowKeys) this._showKeysConfig();
       if (isCategoryLaunch) this._categoryLaunch();
-      if (this._instantRedirect && isKey) this._submitWithValue(newQuery);
+      if (config.get('instantRedirect') && isKey) this._submitWithValue(newQuery);
     }
   
     _handleKeyup(e) {
@@ -132,7 +127,7 @@ class Form {
     }
   
     _redirect(redirect) {
-      if ((this._newTab) || (this._newTabWithCtrl && this.isCtrlEnter)) window.open(redirect, '_blank');
+      if ((config.get('newTab')) || (config.get('newTabWithCtrl') && this.isCtrlEnter)) window.open(redirect, '_blank');
       else window.location.href = redirect;
     }
   
@@ -150,7 +145,7 @@ class Form {
     }
   
     _setBackgroundFromQuery(query) {
-      if (!this._colors) return;
+      if (!config.get('colors')) return;
       this._formEl.style.background = this._parseQuery(query).color;
     }
   
@@ -159,7 +154,7 @@ class Form {
       let query = this._inputEl.value;
       if (this._suggester) this._suggester.success(query);
       this.hide();
-      if ((this.isCtrlEnter) && (!this._newTabWithCtrl)) query += '.com';
+      if ((this.isCtrlEnter) && (!config.get('newTabWithCtrl'))) query += '.com';
       this._redirect(this._parseQuery(query).redirect);
     }
   
