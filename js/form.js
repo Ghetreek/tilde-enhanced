@@ -137,6 +137,7 @@ class Form {
     }
   
     _registerEvents() {
+      document.addEventListener('wheel', (e) => this._toggleHelp(e.deltaY > 0));
       document.addEventListener('keydown', this._handleKeydown);
       document.addEventListener('keyup', this._handleKeyup);
       this._inputEl.addEventListener('input', this._handleInput);
